@@ -1,0 +1,122 @@
+<header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Train Booking</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#" (click)="searchThroughPNR = !searchThroughPNR" *ngIf="!searchThroughPNR">Search Through PNR</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="searchThroughPNR = !searchThroughPNR" *ngIf="searchThroughPNR">Book Tickets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="checkCurrStatus()" href="#" data-bs-toggle="modal" data-bs-target="#currStatus">Current Status</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero-section text-center py-5">
+    <div class="container">
+      <h1 class="display-4 mb-3">Book Your Train Journey Now!</h1>
+      <p class="lead">Travel in Comfort and Style</p>
+      <input type="button" class="btn btn-primary" (click)="reset()" value="Reset bokings to empty">
+    </div>
+  </section>
+
+  <!-- Booking Section -->
+  <section class="booking-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <img
+            src="https://img.freepik.com/free-photo/steam-train-chugs-through-mountain-forest-scene-generative-ai_188544-8072.jpg?w=740&t=st=1689693396~exp=1689693996~hmac=182a21f84e38697f8d9a5b8736c8f7312e228e60fbeeb06ef34a12b0df914e81"
+            alt="Train Image" class="img-fluid rounded" />
+        </div>
+        <div class="col-md-6 mt-4 mt-md-0" *ngIf="!searchThroughPNR">
+          <h2 class="mb-4">Plan Your Journey</h2>
+          <form [formGroup]="ticketForm">
+            <div class="form-group">
+              <label for="from">Name</label>
+              <input formControlName="name" type="text" class="form-control mt-1" id="name" placeholder="Name" />
+              <div *ngIf="
+                  ticketForm.get('name')?.touched &&
+                  ticketForm.get('name')?.invalid
+                " class="text-danger mt-2">
+                Please enter valid Name
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="from">Number of seats</label>
+              <input formControlName="numberOfTicket" type="text" class="form-control mt-1" id="noOfTicket"
+                placeholder="Enter Number of tickets" (keyup)="numericOnly($event, ticketForm.get('numberOfTicket'))" />
+              <div *ngIf="
+                  ticketForm.get('numberOfTicket')?.touched &&
+                  ticketForm.get('numberOfTicket')?.errors?.required
+                " class="text-danger mt-2">
+                Please enter valid number of Seats
+              </div>
+              <div *ngIf="limitExceed" class="text-danger mt-2">
+                You Can not book more then 7 Tickets
+              </div>
+            </div>
+            <button type="submit" (click)="bookTicket()" class="btn btn-success btn-block mt-3">
+              Book Ticket
+            </button>
+          </form>
+        </div>
+        <div class="col-md-6 mt-4 mt-md-0" *ngIf="searchThroughPNR">
+          <h2 class="mb-4">Search Through PNR</h2>
+          <form [formGroup]="pnrForm">
+            <div class="form-group">
+              <label for="from">PNR Number</label>
+              <input formControlName="pnrNumber" type="text" class="form-control mt-1" id="pnrNumber"
+              (keyup)="numericOnly($event,pnrForm.get('pnrNumber'))" placeholder="PNR Number" />
+              <div *ngIf="
+                  pnrForm.get('pnrNumber')?.touched &&
+                  pnrForm.get('pnrNumber')?.invalid
+                " class="text-danger mt-2">
+                Please enter valid PNR
+              </div>
+            </div>
+            <button type="submit" (click)="search()" class="btn btn-success btn-block mt-3">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal -->
+<div class="modal fade" id="currStatus" tabindex="-1" aria-labelledby="currStatusLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="currStatusLabel">Current Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p *ngFor="let ele of currStatus">
+          <span *ngFor="let i of ele | keyvalue" class="mr-2 font-monospace" [ngClass]="{'text-danger': i.value != 'available', 'text-success': i.value == 'available'}">
+            {{i.key}}
+          </span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
