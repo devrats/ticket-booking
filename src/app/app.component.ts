@@ -44,7 +44,8 @@ export class AppComponent implements OnInit {
       ],
     });
   }
-
+  
+  // function to allow numeric values only
   numericOnly(event: any, formControl: any) {
     let val = event.target?.value.replace(/\D/g, '');
     formControl?.setValue(val);
@@ -53,6 +54,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // function to allow only to a limit to ticket
   limiter() {
     let val = this.ticketForm.get('numberOfTicket')?.value;
     if (val > 7) {
@@ -65,6 +67,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // function to book ticket (rider function)
   async bookTicket() {
     if (this.ticketForm.invalid) {
       return;
@@ -97,6 +100,7 @@ export class AppComponent implements OnInit {
     // console.log(this.tickets);
   }
 
+  // function to find closest seats by checking in blocks from 1 to 12
   findSeats(noOfTicket: number) {
     let blockSize = 1;
     let seatAvailable = 0;
@@ -114,6 +118,7 @@ export class AppComponent implements OnInit {
     return null;
   }
 
+  // function to allocate ticket
   ticketMaker(ticketsDetails: any, numberOfTicket: number) {
     const { blockSize, i } = ticketsDetails;
     for (let j = i; j < blockSize + i; j++) {
@@ -129,6 +134,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+    // function to create ticket numbers
   createTicket(row: number, seats: number) {
     let startingPoint;
     if (row == 0) {
@@ -142,6 +148,8 @@ export class AppComponent implements OnInit {
       this.tickets.push(letter + (j + 1));
     }
   }
+
+  // function to search ticket by PNR
 
   async search() {
     if (this.pnrForm.invalid) {
@@ -164,11 +172,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // function to find current status
   async checkCurrStatus() {
     this.currStatus = await this.databaseService.getCurrStatus();
     this.currStatus = JSON.parse(this.currStatus)
   }
 
+  //function to reset the database
   async reset(){
     await this.databaseService.reset();
     Swal.fire({
