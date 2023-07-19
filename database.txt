@@ -1,0 +1,9 @@
+Three Collection
+    1. currentStatus -> store current availablity of seats in arrays of JSON
+    2. seatAvailablity -> strore currently available seats in each row in form of array
+    3. pnrStatus -> store PNR and ticket numbers
+        scema => {
+            PNR number,
+            name, 
+            seats Number
+        }
